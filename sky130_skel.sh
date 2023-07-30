@@ -1,3 +1,7 @@
+#!/bin/bash
+SCRIPT_DIR=$(dirname "$0")
+export SCRIPT_DIR
+chmod u+x *.sh
 ./1-solve_dependencies.sh
 ./2-skywater_pdk.sh
 ./3-magic.sh

@@ -1,3 +1,4 @@
+#!/bin/bash
 # download skywater pdk
 echo "Download skywater pdk"
 git clone https://github.com/google/skywater-pdk

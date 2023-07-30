@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Install Gedit Spice Highlight"
 git clone https://github.com/thomasysliu/Gedit-SPICE-syntax-highlighting
 cd Gedit-SPICE-syntax-highlighting/

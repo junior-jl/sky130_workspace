@@ -1,3 +1,4 @@
+#!/bin/bash
 #ASITIC
 echo "Install ASITIC"
 #Asitic
@@ -32,7 +33,7 @@ wget https://raw.githubusercontent.com/yrrapt/inductor-generator/main/asitic/sky
 
 
 echo "asitic_sky130"
-cp /home/$(whoami)/sky130_workspace/utilities/asitic_sky130 asitic_sky130
+cp $SCRIPT_DIR/utilities/asitic_sky130 asitic_sky130
 chmod +x asitic_sky130
 
 cd ..

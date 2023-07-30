@@ -1,3 +1,4 @@
+#!/bin/bash
 # GHDL
 sudo apt install gnat -y
 git clone https://github.com/ghdl/ghdl
@@ -47,6 +48,6 @@ cd ..
 
 sudo rm /usr/local/bin/../share/yosys/plugins/ghdl.so
 sudo mkdir /usr/local/bin/../share/yosys/plugins/
-sudo cp /home/$(whoami)/sky130_workspace/ghdl-yosys-plugin/ghdl.so /usr/local/bin/../share/yosys/plugins/ghdl.so
+sudo cp $SCRIPT_DIR/ghdl-yosys-plugin/ghdl.so /usr/local/bin/../share/yosys/plugins/ghdl.so
 sudo chmod 777 /usr/local/bin/../share/yosys/plugins/ghdl.so
 

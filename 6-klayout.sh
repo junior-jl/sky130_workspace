@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Install Klayout sky130 tech"
 mkdir ~/.klayout
 
