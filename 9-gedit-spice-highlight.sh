@@ -1,8 +1,10 @@
 #!/bin/bash
+set -e
+
 echo "Install Gedit Spice Highlight"
 git clone https://github.com/thomasysliu/Gedit-SPICE-syntax-highlighting
 cd Gedit-SPICE-syntax-highlighting/
-sudo cp spice.lang /usr/share/gtksourceview-4/language-specs/
+mkdir -p ~/.local/share/gtksourceview-4/language-specs/
+cp spice.lang ~/.local/share/gtksourceview-4/language-specs/
 cd ..
-
 

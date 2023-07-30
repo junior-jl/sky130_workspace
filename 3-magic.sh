@@ -1,21 +1,30 @@
 #!/bin/bash
+set -e
+
 echo "Download and install magic"
-# download
+# download magic
 git clone https://github.com/RTimothyEdwards/magic.git
 cd magic
-#git checkout magic-8.3
-# compile & install
-sudo ./configure
-sudo make
-sudo make install
+
+# compile & install magic
+yes | sudo ./configure
+yes | sudo make
+yes | sudo make install
 cd ..
-#download the open pdk
+
+# download the open pdk
 git clone https://github.com/RTimothyEdwards/open_pdks
 cd open_pdks
-#git checkout open_pdks-1.0
-sudo ./configure --enable-sky130-pdk=$SCRIPT_DIR/skywater-pdk/libraries
-sudo make
-sudo make install
+
+# configure & install open pdks
+yes | sudo ./configure --enable-sky130-pdk="$SCRIPT_DIR/skywater-pdk/libraries"
+yes | sudo make
+yes | sudo make install
 cd ../..
-sudo ln -s $SCRIPT_DIR/open_pdks/sky130/sky130A/libs.tech/magic/* /usr/local/lib/magic/sys/
-export PDK_ROOT=$SCRIPT_DIR/open_pdks/sky130
+
+# create a symbolic link to magic libraries
+sudo ln -s "$SCRIPT_DIR/open_pdks/sky130/sky130A/libs.tech/magic/"* /usr/local/lib/magic/sys/
+
+# export PDK_ROOT environment variable
+export PDK_ROOT="$SCRIPT_DIR/open_pdks/sky130"
+
