@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-echo "Install xschem + xschem_sky130 + skywater-pdk + ngspice + adms + asitic + magic + klayout + open-pdk + gedit-SPICE-highlight"
-
 # Solve dependencies
 echo "Solve dependencies"
 export DEBIAN_FRONTEND=noninteractive

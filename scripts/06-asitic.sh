@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-# ASITIC
 echo "Install ASITIC"
 # Asitic
 sudo apt-get install gcc-multilib -y

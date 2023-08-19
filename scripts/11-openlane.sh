@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+echo "Install Openlane"
+
 # Openlane
 sudo apt install python3.10-venv curl tcllib -y
 cd openlane
