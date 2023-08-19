@@ -122,11 +122,21 @@ def run_gui():
             # Append the selected scripts
             selected_scripts.extend([options_to_scripts[option[0]] for option in selected_options])
 
+            # Request sudo password
+            sudo_password = sg.popup_get_text('Please enter your sudo password:', password_char='*')
+            if not sudo_password:
+                continue
+
             # Run the selected scripts
             for script in selected_scripts:
                 script_path = f'scripts/{script}'
-                subprocess.run(['bash', script_path])
-                print(f"Running {script_path}")
+                try:
+                    subprocess.run(['bash', script_path, sudo_password], check=True)
+                    sg.popup('Script executed successfully!', title='Success')
+                except subprocess.CalledProcessError as e:
+                    sg.popup_error(f'An error occurred while executing the script: {e}', title='Error')
+
+                # print(f"Running {script_path}")
 
             # Add your installation logic here if needed
             install_message = f'Installing the following scripts to \n{install_directory}:\n'
