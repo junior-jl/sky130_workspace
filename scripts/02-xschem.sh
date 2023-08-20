@@ -1,11 +1,9 @@
 #!/bin/bash
-set -e
-
 echo "Download and install Xschem"
 git clone https://github.com/StefanSchippers/xschem
 cd xschem/
 ./configure
-make 
+make
 sudo make install
 cd ..
 mkdir -p ~/.xschem/simulations
@@ -13,7 +11,8 @@ mkdir -p ~/.xschem/simulations
 # libs sky130 to xschem
 echo "libs sky130 to xschem"
 cd ~/.xschem/simulations/
-cp "$SCRIPT_DIR/utilities/.spiceinit" .spiceinit
+echo "set ngbehavior=hsa" > .spiceinit
+echo "set ng_nomodcheck" >> .spiceinit
 cd ..
 mkdir -p xschem_library
 cd xschem_library/

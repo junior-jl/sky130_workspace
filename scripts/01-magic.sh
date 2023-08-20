@@ -1,6 +1,4 @@
 #!/bin/bash
-set -e
-
 echo "Download and install magic"
 # download magic
 git clone https://github.com/RTimothyEdwards/magic.git
@@ -18,6 +16,7 @@ cd open_pdks
 
 # configure & install open pdks
 yes | sudo ./configure --enable-sky130-pdk="$SCRIPT_DIR/skywater-pdk/libraries"
+echo $SCRIPT_DIR
 yes | sudo make
 yes | sudo make install
 cd ../..

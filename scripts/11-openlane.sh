@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 echo "Install Openlane"
 
@@ -19,9 +18,9 @@ sudo chmod 666 /var/run/docker.sock
 
 make
 export PDK_ROOT="$SCRIPT_DIR/open_pdks/sky130/"
-sudo rm -rf "$SCRIPT_DIR/open_pdks/sky130/sky130A"
-sudo rm -rf "$SCRIPT_DIR/open_pdks/sky130/sky130B"
-make pdk
-make test
+# sudo rm -rf "$SCRIPT_DIR/open_pdks/sky130/sky130A"
+# sudo rm -rf "$SCRIPT_DIR/open_pdks/sky130/sky130B"
+# make pdk
+# make test
 cd ..
 

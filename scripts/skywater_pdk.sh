@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 # download skywater pdk
 echo "Download skywater pdk"

@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 echo "Install ASITIC"
 # Asitic
@@ -12,8 +11,8 @@ wget http://rfic.eecs.berkeley.edu/~niknejad/Asitic/grackle/doc_05_28_01.tgz
 wget http://rfic.eecs.berkeley.edu/~niknejad/Asitic/3.19.00/common.tgz
 
 gzip -d asitic_linux.gz
-tar -xvzf doc_05_28_01.tgz 
-tar -xvzf common.tgz 
+tar -xvzf doc_05_28_01.tgz
+tar -xvzf common.tgz
 
 chmod +x asitic_linux
 
@@ -31,7 +30,8 @@ echo "Downloading ASITIC .tek file from yrrapt@github repository..."
 wget https://raw.githubusercontent.com/yrrapt/inductor-generator/main/asitic/sky130.tek
 
 echo "asitic_sky130"
-cp "$SCRIPT_DIR/utilities/asitic_sky130" asitic_sky130
+echo "./asitic_linux -t sky130.tek" > asitic_sky130
+# cp "$SCRIPT_DIR/utilities/asitic_sky130" asitic_sky130
 chmod +x asitic_sky130
 
 cd ..

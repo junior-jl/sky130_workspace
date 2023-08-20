@@ -8,6 +8,18 @@ import subprocess
 
 # Define the program options with descriptions and associated scripts
 program_options = [
+    ('Solve Dependencies',
+     'Install requirements.',
+     'solve_dependencies.sh'),
+    ('Skywater 130nm PDK',
+     'Install the libraries for the Project Design Kit.',
+     'skywater_pdk.sh'),
+    ('GAW',
+     'GAW is a netlist editor and viewer.',
+     'gaw.sh'),
+    ('Gedit SPICE Highlight',
+     'Plugin designed for GEdit text editor to add syntax highlighting for SPICE netlists',
+     'gedit-spice-highlight.sh'),
     ('Asitic',
      'Asitic is a CAD tool that aids the RF circuit designer in optimizing and modeling spiral inductors, transformers, capacitors, and substrate coupling.',
      '06-asitic.sh'),
@@ -20,14 +32,14 @@ program_options = [
     ('Netgen', 'Netgen is a digital netlist comparison tool.', '05-netgen.sh'),
     ('OpenLane',
      'OpenLane is an open-source digital ASIC flow including EDA tools and PDKs for Skywater 130nm and other technologies.',
-     '11-openlane.sh')
+     '11-openlane.sh'),
+    ('XSchem',
+     'XSchem is an open-source schematic capture tool used for creating and editing electronic circuit schematics.',
+     '02-xschem.sh')
 ]
 
 # Define a dictionary to map options to scripts
 options_to_scripts = {option[0]: option[2] for option in program_options if option[2] is not None}
-
-# Scripts that will always be installed
-always_install_scripts = ['solve_dependencies.sh', 'skywater_pdk.sh', 'gedit-spice-highlight.sh', 'gaw.sh']
 
 # Define the installation directory section
 install_directory_section = [
@@ -36,7 +48,7 @@ install_directory_section = [
 ]
 
 # Sort the program_options alphabetically
-program_options = sorted(program_options, key=lambda x: x[0].lower())
+# program_options = sorted(program_options, key=lambda x: x[0].lower())
 
 # Define the program selection section as a column
 program_selection_section = [
@@ -47,7 +59,6 @@ program_selection_section = [
                 for option in program_options
             ],
             vertical_alignment='top'
-            # size=(400, 400)
         )
     ],
 ]
@@ -57,7 +68,6 @@ buttons_section = [
     [sg.Button('Install'), sg.Button('Cancel')],
 ]
 
-
 def run_gui():
     # Combine layout sections
     layout = [
@@ -66,13 +76,14 @@ def run_gui():
         install_directory_section,
         [sg.Text('Select programs to install:')],
         [sg.Button('Select All')],
-        program_selection_section,  # Use the program_selection_section here
+        program_selection_section,
+        [sg.Text('', key='-INSTALL-MESSAGE-', size=(60, 1), font=('Helvetica', 14), text_color='red')],
         buttons_section,
     ]
 
     # Create the window
     window = sg.Window('Skywater 130nm Toolchain Installer', layout, resizable=True, finalize=True)
-
+    original_cwd = os.getcwd()
     # Event loop
     while True:
         event, values = window.read()
@@ -91,36 +102,11 @@ def run_gui():
 
             os.environ["SCRIPT_DIR"] = install_directory
 
-            print(f"SCRIPT_DIR is set to: {os.environ.get('SCRIPT_DIR')}")
-
             # Check which programs the user selected to install
             selected_options = [option for option in program_options if values['-' + option[0] + '-']]
 
-            # Initialize a flag to check if the mandatory scripts are added
-            mandatory_scripts_added = False
-
-            # Add the scripts that will always be installed
-            selected_scripts = []
-
-            # Check if there are no optional programs selected (excluding always-install scripts)
-            if not selected_options:
-                confirm_popup = sg.popup_yes_no(
-                    'No optional programs selected. Install only the Skywater PDK?',
-                    title='Confirmation'
-                )
-                if confirm_popup == 'Yes':
-                    selected_scripts.append('solve_dependencies.sh')
-                    selected_scripts.append('skywater_pdk.sh')  # Only install Skywater PDK
-                    mandatory_scripts_added = True
-                else:
-                    continue  # User canceled
-
-            # If mandatory scripts are not added, add them
-            if not mandatory_scripts_added:
-                selected_scripts.extend(always_install_scripts)
-
-            # Append the selected scripts
-            selected_scripts.extend([options_to_scripts[option[0]] for option in selected_options])
+            # Add the selected program options to the installation scripts
+            selected_scripts = [options_to_scripts[option[0]] for option in selected_options]
 
             # Request sudo password
             sudo_password = sg.popup_get_text('Please enter your sudo password:', password_char='*')
@@ -129,19 +115,28 @@ def run_gui():
 
             # Run the selected scripts
             for script in selected_scripts:
-                script_path = f'scripts/{script}'
+                script_path = f'{original_cwd}/scripts/{script}'
                 try:
-                    subprocess.run(['bash', script_path, sudo_password], check=True)
-                    sg.popup('Script executed successfully!', title='Success')
+                    # Change the current working directory to the installation directory
+                    os.chdir(install_directory)
+
+                    # Update the installation message in the GUI
+                    window['-INSTALL-MESSAGE-'].update(f'Installing {script} on {install_directory}...')
+                    window.refresh()
+
+                    # Use sudo to execute the script with the provided password
+                    cmd = f'echo "{sudo_password}" | sudo -S bash {script_path}'
+                    subprocess.run(cmd, shell=True, check=True)
                 except subprocess.CalledProcessError as e:
                     sg.popup_error(f'An error occurred while executing the script: {e}', title='Error')
+                finally:
+                    # Reset the installation message in the GUI
+                    window['-INSTALL-MESSAGE-'].update('')
+                    window.refresh()
 
-                # print(f"Running {script_path}")
-
-            # Add your installation logic here if needed
-            install_message = f'Installing the following scripts to \n{install_directory}:\n'
-            install_message += '\n'.join(selected_scripts)
-            sg.popup(install_message, title='Installation Progress')
+            # Inform the user that the installation is complete
+            sg.popup('Installation completed!', title='Success')
+            window.close()
 
     # Close the window
     window.close()
